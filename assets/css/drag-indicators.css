@@ -28,7 +28,7 @@
 .fb-component:hover {
     outline: 2px solid #0d6efd;
     outline-offset: 2px;
-    cursor: move;
+    cursor: pointer;
 }
 
 /* Selected component */
@@ -38,10 +38,10 @@
     background-color: rgba(13, 110, 253, 0.05);
 }
 
-/* Drag handle cursor */
+/* Component base styles */
 .fb-component {
     position: relative;
-    cursor: move;
+    cursor: pointer;
     transition: all 0.15s ease;
 }
 
@@ -102,19 +102,25 @@
     }
 }
 
-/* Component actions (delete button) */
+/* Component actions (drag handle and delete button) */
 .fb-component-actions {
     position: absolute;
     top: -8px;
+    left: -8px;
     right: -8px;
     z-index: 10;
     display: none;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.fb-component-actions button {
+    pointer-events: auto;
 }
 
 .fb-component:hover .fb-component-actions,
 .fb-component.fb-selected .fb-component-actions {
     display: flex;
-    gap: 4px;
 }
 
 /* Resize handles */

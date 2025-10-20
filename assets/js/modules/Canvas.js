@@ -43,6 +43,12 @@ export class Canvas {
                 return;
             }
 
+            // Don't select if clicking drag handle
+            if (e.target.closest('[data-action="drag"]')) {
+                e.stopPropagation();
+                return;
+            }
+
             // Select component
             if (component) {
                 const componentId = component.getAttribute('data-component-id');
@@ -54,17 +60,17 @@ export class Canvas {
             }
         });
 
-        // Drag to reorder - Start
+        // Drag to reorder - Start (only on drag handle)
         this.canvasRow.addEventListener('mousedown', (e) => {
-            const component = e.target.closest('.fb-component');
+            const dragHandle = e.target.closest('[data-action="drag"]');
             
-            // Don't interfere with resize handles or delete button
-            if (e.target.closest('.fb-resize-handle') || e.target.closest('[data-action="delete"]')) {
-                return;
-            }
-
-            if (component) {
-                this.startDragReorder(component, e);
+            if (dragHandle) {
+                e.preventDefault();
+                e.stopPropagation();
+                const component = dragHandle.closest('.fb-component');
+                if (component) {
+                    this.startDragReorder(component, e);
+                }
             }
         });
 
@@ -84,21 +90,18 @@ export class Canvas {
     }
 
     startDragReorder(element, e) {
-        // Small delay to distinguish click from drag
-        this.dragTimeout = setTimeout(() => {
-            this.draggedComponent = element;
-            this.draggedElement = element;
-            
-            const componentId = element.getAttribute('data-component-id');
-            this.draggedComponentId = componentId;
-            
-            // Add dragging class
-            element.classList.add('fb-dragging');
-            element.style.cursor = 'grabbing';
-            
-            // Store initial position
-            this.initialY = e.clientY;
-        }, 100);
+        this.draggedComponent = element;
+        this.draggedElement = element;
+        
+        const componentId = element.getAttribute('data-component-id');
+        this.draggedComponentId = componentId;
+        
+        // Add dragging class
+        element.classList.add('fb-dragging');
+        element.style.cursor = 'grabbing';
+        
+        // Store initial position
+        this.initialY = e.clientY;
     }
 
     dragReorder(e) {
@@ -131,8 +134,6 @@ export class Canvas {
     }
 
     endDragReorder() {
-        clearTimeout(this.dragTimeout);
-        
         if (!this.draggedComponent) return;
 
         // Remove dragging class

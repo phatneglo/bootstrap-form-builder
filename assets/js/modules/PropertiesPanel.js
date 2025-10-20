@@ -16,6 +16,7 @@ export class PropertiesPanel {
         this.propertyPickerModal = new bootstrap.Modal(document.getElementById('propertyPickerModal'));
         this.lastApiData = null;
         this.currentPickerField = null;
+        this.eventListeners = []; // Track event listeners for cleanup
     }
 
     init() {
@@ -31,6 +32,9 @@ export class PropertiesPanel {
     }
 
     render(component) {
+        // Clean up old event listeners
+        this.cleanupEventListeners();
+        
         this.panel.innerHTML = '';
         
         const container = document.createElement('div');
@@ -49,6 +53,19 @@ export class PropertiesPanel {
         
         this.panel.appendChild(container);
         this.attachEventListeners(component);
+    }
+
+    cleanupEventListeners() {
+        // Remove all tracked event listeners
+        this.eventListeners.forEach(({ element, event, handler }) => {
+            element.removeEventListener(event, handler);
+        });
+        this.eventListeners = [];
+    }
+
+    addEventListener(element, event, handler) {
+        element.addEventListener(event, handler);
+        this.eventListeners.push({ element, event, handler });
     }
 
     createContentCard(component) {
@@ -354,7 +371,7 @@ export class PropertiesPanel {
         const form = this.panel;
         
         // Listen to all input changes
-        form.addEventListener('input', (e) => {
+        this.addEventListener(form, 'input', (e) => {
             const field = e.target;
             const propertyName = field.name;
             
@@ -379,7 +396,7 @@ export class PropertiesPanel {
         // Data source change
         const dataSourceSelect = form.querySelector('select[name="dataSource"]');
         if (dataSourceSelect) {
-            dataSourceSelect.addEventListener('change', (e) => {
+            this.addEventListener(dataSourceSelect, 'change', (e) => {
                 const manual = form.querySelector('#manual-options');
                 const api = form.querySelector('#api-options');
                 
@@ -398,7 +415,7 @@ export class PropertiesPanel {
         // Add option button
         const btnAddOption = form.querySelector('#btn-add-option');
         if (btnAddOption) {
-            btnAddOption.addEventListener('click', () => {
+            this.addEventListener(btnAddOption, 'click', () => {
                 this.addOption(component);
             });
         }
@@ -406,7 +423,7 @@ export class PropertiesPanel {
         // Add header button
         const btnAddHeader = form.querySelector('#btn-add-header');
         if (btnAddHeader) {
-            btnAddHeader.addEventListener('click', () => {
+            this.addEventListener(btnAddHeader, 'click', () => {
                 this.addHeader(component);
             });
         }
@@ -414,7 +431,7 @@ export class PropertiesPanel {
         // Test API button
         const btnTestApi = form.querySelector('#btn-test-api');
         if (btnTestApi) {
-            btnTestApi.addEventListener('click', () => {
+            this.addEventListener(btnTestApi, 'click', () => {
                 this.testApi(component);
             });
         }
@@ -424,19 +441,19 @@ export class PropertiesPanel {
         const btnPickValueKey = form.querySelector('#btn-pick-value-key');
         
         if (btnPickLabelKey) {
-            btnPickLabelKey.addEventListener('click', () => {
+            this.addEventListener(btnPickLabelKey, 'click', () => {
                 this.showPropertyPicker('apiLabelKey', 'Label Key');
             });
         }
         
         if (btnPickValueKey) {
-            btnPickValueKey.addEventListener('click', () => {
+            this.addEventListener(btnPickValueKey, 'click', () => {
                 this.showPropertyPicker('apiValueKey', 'Value Key');
             });
         }
 
         // Remove buttons
-        form.addEventListener('click', (e) => {
+        this.addEventListener(form, 'click', (e) => {
             if (e.target.closest('[data-action="remove-option"]')) {
                 const optionGroup = e.target.closest('[data-option-index]');
                 const index = parseInt(optionGroup.getAttribute('data-option-index'));
@@ -451,7 +468,7 @@ export class PropertiesPanel {
         });
 
         // Update options on input
-        form.addEventListener('input', (e) => {
+        this.addEventListener(form, 'input', (e) => {
             if (e.target.hasAttribute('data-field')) {
                 const parent = e.target.closest('[data-option-index]');
                 if (parent) {
@@ -720,6 +737,9 @@ export class PropertiesPanel {
     }
 
     renderEmpty() {
+        // Clean up old event listeners
+        this.cleanupEventListeners();
+        
         this.panel.innerHTML = `
             <div class="text-center text-muted py-5">
                 <i class="bi bi-gear display-4 opacity-25"></i>

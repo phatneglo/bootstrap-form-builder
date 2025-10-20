@@ -74,16 +74,25 @@ export class FormBuilder {
 
         // Handle keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            // Delete selected component with Delete key
-            if (e.key === 'Delete') {
+            // Don't trigger shortcuts when editing text inputs
+            const activeElement = document.activeElement;
+            const isEditingText = activeElement && (
+                activeElement.tagName === 'INPUT' ||
+                activeElement.tagName === 'TEXTAREA' ||
+                activeElement.contentEditable === 'true' ||
+                activeElement.isContentEditable
+            );
+
+            // Delete selected component with Delete key (only when not editing text)
+            if (e.key === 'Delete' && !isEditingText) {
                 const selected = StateManager.getSelectedComponent();
                 if (selected) {
                     StateManager.removeComponent(selected.id);
                 }
             }
 
-            // Deselect with Escape key
-            if (e.key === 'Escape') {
+            // Deselect with Escape key (only when not editing text)
+            if (e.key === 'Escape' && !isEditingText) {
                 StateManager.deselectComponent();
             }
         });

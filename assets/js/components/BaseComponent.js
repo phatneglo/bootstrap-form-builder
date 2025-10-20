@@ -36,11 +36,27 @@ export class BaseComponent {
         return wrapper;
     }
 
-    // Render action buttons (delete, etc.)
+    // Render action buttons (drag handle, delete, etc.)
     renderActions() {
         const actions = document.createElement('div');
         actions.className = 'fb-component-actions';
         
+        // Drag handle button (top-left)
+        const dragBtn = document.createElement('button');
+        dragBtn.className = 'btn btn-secondary btn-sm rounded-circle';
+        dragBtn.innerHTML = '<i class="bi bi-grip-vertical"></i>';
+        dragBtn.setAttribute('data-action', 'drag');
+        dragBtn.style.width = '24px';
+        dragBtn.style.height = '24px';
+        dragBtn.style.padding = '0';
+        dragBtn.style.fontSize = '12px';
+        dragBtn.style.position = 'absolute';
+        dragBtn.style.top = '-8px';
+        dragBtn.style.left = '-8px';
+        dragBtn.type = 'button';
+        dragBtn.title = 'Drag to reorder';
+        
+        // Delete button (top-right)
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-danger btn-sm rounded-circle';
         deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
@@ -49,8 +65,13 @@ export class BaseComponent {
         deleteBtn.style.height = '24px';
         deleteBtn.style.padding = '0';
         deleteBtn.style.fontSize = '14px';
+        deleteBtn.style.position = 'absolute';
+        deleteBtn.style.top = '-8px';
+        deleteBtn.style.right = '-8px';
         deleteBtn.type = 'button';
+        deleteBtn.title = 'Delete component';
         
+        actions.appendChild(dragBtn);
         actions.appendChild(deleteBtn);
         return actions;
     }
