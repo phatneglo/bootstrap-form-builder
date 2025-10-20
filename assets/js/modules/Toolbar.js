@@ -95,7 +95,7 @@ export class Toolbar {
         }
     }
 
-    showPreview() {
+    async showPreview() {
         const formData = StateManager.getFormData();
         
         if (formData.components.length === 0) {
@@ -103,9 +103,37 @@ export class Toolbar {
             return;
         }
 
+        // Load API data for components that need it
+        for (const component of formData.components) {
+            if (['select', 'radio'].includes(component.type) && component.properties.dataSource === 'api') {
+                try {
+                    const options = await this.loadApiOptionsForPreview(component);
+                    if (options) {
+                        component.properties._loadedOptions = options;
+                    }
+                } catch (error) {
+                    console.error('Error loading API options for preview:', error);
+                }
+            }
+        }
+
         // Render preview
         this.previewContent.innerHTML = this.renderPreview(formData);
         this.previewModal.show();
+    }
+
+    async loadApiOptionsForPreview(component) {
+        try {
+            // Import the API utility
+            const { fetchApiOptions } = await import('../utils/api.js');
+            
+            // Use the same function as Canvas
+            return await fetchApiOptions(component);
+        } catch (error) {
+            console.error('Error fetching API options for preview:', error);
+        }
+
+        return null;
     }
 
     renderPreview(formData) {
@@ -164,7 +192,9 @@ export class Toolbar {
                 break;
             
             case 'select':
-                const selectOptions = props.options.map(opt => {
+                // Use API loaded options if available, otherwise use manual options
+                const selectOptionsList = props._loadedOptions || props.options || [];
+                const selectOptions = selectOptionsList.map(opt => {
                     const label = typeof opt === 'string' ? opt : opt.label;
                     const value = typeof opt === 'string' ? opt : opt.value;
                     return `<option value="${value}">${label}</option>`;
@@ -189,8 +219,10 @@ export class Toolbar {
                 break;
             
             case 'radio':
+                // Use API loaded options if available, otherwise use manual options
+                const radioOptionsList = props._loadedOptions || props.options || [];
                 html += `<label class="${props.labelClass || 'form-label'} d-block">${props.label}</label>`;
-                props.options.forEach((opt, i) => {
+                radioOptionsList.forEach((opt, i) => {
                     const label = typeof opt === 'string' ? opt : opt.label;
                     const value = typeof opt === 'string' ? opt : opt.value;
                     
