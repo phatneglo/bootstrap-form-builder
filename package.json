@@ -1,0 +1,52 @@
+{
+  "name": "bootstrap-form-builder",
+  "version": "1.0.0",
+  "description": "A powerful, drag-and-drop form builder built with vanilla JavaScript and Bootstrap 5",
+  "main": "assets/js/main.js",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "dev": "npx live-server --port=8000",
+    "test": "echo \"No tests specified\" && exit 0",
+    "lint": "echo \"No linter configured\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phatneglo/bootstrap-form-builder.git"
+  },
+  "keywords": [
+    "form-builder",
+    "drag-and-drop",
+    "bootstrap",
+    "javascript",
+    "form-generator",
+    "visual-form-builder",
+    "responsive-forms",
+    "api-integration"
+  ],
+  "author": "Bootstrap Form Builder Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phatneglo/bootstrap-form-builder/issues"
+  },
+  "homepage": "https://github.com/phatneglo/bootstrap-form-builder#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "assets/",
+    "examples/",
+    "index.html",
+    "README.md",
+    "LICENSE"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
