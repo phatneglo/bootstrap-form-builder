@@ -1,0 +1,188 @@
+/* Minimal CSS - Only for drag and drop visual feedback */
+
+/* Dragging state */
+.fb-dragging {
+    opacity: 0.5;
+    cursor: grabbing !important;
+}
+
+/* Palette item dragging */
+.fb-palette-item.fb-dragging {
+    opacity: 0.7;
+}
+
+/* Drop zone indicator */
+.fb-drop-zone {
+    border: 2px dashed #0d6efd !important;
+    background-color: rgba(13, 110, 253, 0.05) !important;
+    min-height: 60px;
+    transition: all 0.2s ease;
+}
+
+.fb-drop-zone-active {
+    border-color: #0d6efd !important;
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+/* Component hover state */
+.fb-component:hover {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+    cursor: move;
+}
+
+/* Selected component */
+.fb-component.fb-selected {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Drag handle cursor */
+.fb-component {
+    position: relative;
+    cursor: move;
+    transition: all 0.15s ease;
+}
+
+/* Drop indicator line */
+.fb-drop-indicator {
+    height: 3px;
+    background-color: #0d6efd;
+    margin: 0.5rem 0;
+    border-radius: 2px;
+    position: relative;
+}
+
+.fb-drop-indicator::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #0d6efd;
+    border-radius: 50%;
+}
+
+/* Palette item styles */
+.fb-palette-item {
+    cursor: grab;
+    user-select: none;
+    transition: all 0.15s ease;
+}
+
+.fb-palette-item:active {
+    cursor: grabbing;
+}
+
+/* Canvas placeholder */
+#canvas-placeholder {
+    transition: opacity 0.3s ease;
+}
+
+#canvas-placeholder.fb-hidden {
+    display: none;
+}
+
+/* Smooth animations */
+.fb-component {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Component actions (delete button) */
+.fb-component-actions {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    z-index: 10;
+    display: none;
+}
+
+.fb-component:hover .fb-component-actions,
+.fb-component.fb-selected .fb-component-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* Resize handles */
+.fb-resize-handle {
+    position: absolute;
+    bottom: 50%;
+    transform: translateY(50%);
+    width: 8px;
+    height: 40px;
+    background-color: #0d6efd;
+    cursor: ew-resize;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 5;
+    border-radius: 4px;
+}
+
+.fb-resize-handle-left {
+    left: -4px;
+}
+
+.fb-resize-handle-right {
+    right: -4px;
+}
+
+.fb-component:hover .fb-resize-handle,
+.fb-component.fb-selected .fb-resize-handle {
+    opacity: 0.7;
+}
+
+.fb-resize-handle:hover {
+    opacity: 1 !important;
+    width: 10px;
+}
+
+/* Resizing state */
+.fb-component.fb-resizing {
+    outline: 2px solid #0d6efd;
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.fb-component.fb-resizing * {
+    pointer-events: none;
+}
+
+/* Width indicator tooltip */
+.fb-width-indicator {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0d6efd;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.fb-width-indicator::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: #0d6efd;
+}

@@ -1,0 +1,153 @@
+{
+  "formId": "form-api-example-001",
+  "formName": "Registration Form with API Integration",
+  "version": "1.0.0",
+  "components": [
+    {
+      "id": "comp-1",
+      "type": "h2",
+      "properties": {
+        "content": "User Registration",
+        "columnClass": "col-12",
+        "wrapperClass": "mb-4",
+        "textAlign": "text-center"
+      }
+    },
+    {
+      "id": "comp-2",
+      "type": "text",
+      "properties": {
+        "label": "Full Name",
+        "name": "fullName",
+        "placeholder": "John Doe",
+        "required": true,
+        "columnClass": "col-md-6",
+        "wrapperClass": "mb-3",
+        "inputClass": "form-control",
+        "labelClass": "form-label"
+      }
+    },
+    {
+      "id": "comp-3",
+      "type": "email",
+      "properties": {
+        "label": "Email Address",
+        "name": "email",
+        "placeholder": "john@example.com",
+        "required": true,
+        "columnClass": "col-md-6",
+        "wrapperClass": "mb-3",
+        "inputClass": "form-control",
+        "labelClass": "form-label"
+      }
+    },
+    {
+      "id": "comp-4",
+      "type": "select",
+      "properties": {
+        "label": "Select a User (From API)",
+        "name": "userId",
+        "required": false,
+        "dataSource": "api",
+        "apiUrl": "https://jsonplaceholder.typicode.com/users",
+        "apiMethod": "GET",
+        "apiHeaders": [],
+        "apiLabelKey": "name",
+        "apiValueKey": "id",
+        "apiResponsePath": "",
+        "columnClass": "col-12",
+        "wrapperClass": "mb-3",
+        "inputClass": "form-select",
+        "labelClass": "form-label"
+      }
+    },
+    {
+      "id": "comp-5",
+      "type": "select",
+      "properties": {
+        "label": "How did you hear about us?",
+        "name": "source",
+        "required": false,
+        "dataSource": "manual",
+        "options": [
+          { "label": "Google Search", "value": "google" },
+          { "label": "Social Media", "value": "social_media" },
+          { "label": "Friend Referral", "value": "referral" },
+          { "label": "Advertisement", "value": "advertisement" },
+          { "label": "Other", "value": "other" }
+        ],
+        "columnClass": "col-md-6",
+        "wrapperClass": "mb-3",
+        "inputClass": "form-select",
+        "labelClass": "form-label"
+      }
+    },
+    {
+      "id": "comp-6",
+      "type": "radio",
+      "properties": {
+        "label": "Preferred Contact Method",
+        "name": "contactMethod",
+        "required": true,
+        "dataSource": "manual",
+        "options": [
+          { "label": "Email", "value": "email" },
+          { "label": "Phone", "value": "phone" },
+          { "label": "SMS", "value": "sms" }
+        ],
+        "columnClass": "col-md-6",
+        "wrapperClass": "mb-3",
+        "labelClass": "form-label"
+      }
+    },
+    {
+      "id": "comp-7",
+      "type": "textarea",
+      "properties": {
+        "label": "Additional Comments",
+        "name": "comments",
+        "placeholder": "Tell us more...",
+        "required": false,
+        "rows": 4,
+        "columnClass": "col-12",
+        "wrapperClass": "mb-3",
+        "inputClass": "form-control",
+        "labelClass": "form-label"
+      }
+    },
+    {
+      "id": "comp-8",
+      "type": "separator",
+      "properties": {
+        "columnClass": "col-12",
+        "wrapperClass": "my-4"
+      }
+    },
+    {
+      "id": "comp-9",
+      "type": "checkbox",
+      "properties": {
+        "label": "I agree to the terms and conditions",
+        "name": "agreeTerms",
+        "checked": false,
+        "columnClass": "col-12",
+        "wrapperClass": "mb-3 form-check",
+        "inputClass": "form-check-input",
+        "labelClass": "form-check-label"
+      }
+    },
+    {
+      "id": "comp-10",
+      "type": "checkbox",
+      "properties": {
+        "label": "Subscribe to newsletter",
+        "name": "newsletter",
+        "checked": false,
+        "columnClass": "col-12",
+        "wrapperClass": "mb-3 form-check",
+        "inputClass": "form-check-input",
+        "labelClass": "form-check-label"
+      }
+    }
+  ]
+}
