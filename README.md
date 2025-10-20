@@ -2,7 +2,7 @@
 
 A powerful, drag-and-drop form builder built with vanilla JavaScript and Bootstrap 5. Create beautiful, responsive forms with an intuitive visual interface, complete with API integration for dynamic data sources.
 
-![Form Builder Interface](https://via.placeholder.com/800x400/0d6efd/ffffff?text=Bootstrap+Form+Builder)
+![Form Builder Interface](https://github.com/phatneglo/bootstrap-form-builder/blob/main/examples/screenshot.png)
 
 ## ✨ Features
 
