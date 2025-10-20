@@ -85,7 +85,8 @@ export class FormField extends BaseComponent {
 
     renderSelect() {
         const required = this.properties.required ? 'required' : '';
-        const options = this.properties.options || [];
+        // Use API loaded options if available, otherwise use manual options
+        const options = this.properties._loadedOptions || this.properties.options || [];
 
         const optionsHtml = options.map(opt => {
             // Support both old format (string) and new format (object with label/value)
@@ -130,7 +131,8 @@ export class FormField extends BaseComponent {
     }
 
     renderRadioGroup() {
-        const options = this.properties.options || [];
+        // Use API loaded options if available, otherwise use manual options
+        const options = this.properties._loadedOptions || this.properties.options || [];
         const required = this.properties.required ? 'required' : '';
 
         const optionsHtml = options.map((opt, index) => {

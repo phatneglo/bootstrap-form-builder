@@ -25,7 +25,6 @@ export class Canvas {
         EventBus.on('state:changed', () => this.render());
         EventBus.on('state:cleared', () => this.clear());
         EventBus.on('state:loaded', () => this.render());
-        EventBus.on('component:updated', () => this.render());
     }
 
     setupEventListeners() {
@@ -170,10 +169,17 @@ export class Canvas {
             
             // Render each component
             for (const component of state.components) {
+                // Clean up old API data first
+                delete component._apiOptions;
+                if (component.properties._loadedOptions) {
+                    delete component.properties._loadedOptions;
+                }
+                
                 // Load API options if needed
                 if (['select', 'radio'].includes(component.type) && component.properties.dataSource === 'api') {
                     const options = await this.loadApiOptions(component);
                     if (options) {
+                        // Temporarily store for this render only
                         component._apiOptions = options;
                     }
                 }
@@ -190,19 +196,10 @@ export class Canvas {
     }
 
     async loadApiOptions(component) {
-        const cacheKey = `${component.id}_${component.properties.apiUrl}`;
-        
-        // Check cache
-        if (this.apiOptionsCache.has(cacheKey)) {
-            return this.apiOptionsCache.get(cacheKey);
-        }
-
         try {
+            // Always fetch fresh from API for real-time data (no cache)
             const options = await fetchApiOptions(component);
-            if (options) {
-                this.apiOptionsCache.set(cacheKey, options);
-                return options;
-            }
+            return options;
         } catch (error) {
             console.error('Error loading API options:', error);
         }
@@ -213,15 +210,9 @@ export class Canvas {
     renderComponent(component) {
         let componentInstance;
 
-        // Use API options if available
+        // Use API options if available - modify the existing component instead of creating new one
         if (component._apiOptions) {
-            component = {
-                ...component,
-                properties: {
-                    ...component.properties,
-                    _loadedOptions: component._apiOptions
-                }
-            };
+            component.properties._loadedOptions = component._apiOptions;
         }
 
         switch (component.type) {

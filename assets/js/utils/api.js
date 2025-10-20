@@ -53,17 +53,8 @@ export async function fetchApiOptions(component) {
         return null;
     }
 
-    // Create cache key
-    const cacheKey = `${props.apiUrl}_${props.apiMethod}_${JSON.stringify(props.apiHeaders)}`;
-    
-    // Check cache first
-    if (apiCache.has(cacheKey)) {
-        const cached = apiCache.get(cacheKey);
-        return processApiResponse(cached, props);
-    }
-
     try {
-        // Fetch from API
+        // Always fetch fresh from API for real-time data (no cache)
         const result = await testApiEndpoint(
             props.apiUrl,
             props.apiMethod || 'GET',
@@ -71,8 +62,6 @@ export async function fetchApiOptions(component) {
         );
 
         if (result.success) {
-            // Cache the response
-            apiCache.set(cacheKey, result.data);
             return processApiResponse(result.data, props);
         }
     } catch (error) {
@@ -160,7 +149,32 @@ export function extractPropertiesFromFirstItem(array) {
         return [];
     }
 
-    return Object.keys(firstItem);
+    // Extract all properties including nested ones
+    const leafProperties = [];
+    const objectProperties = new Set(); // Track object properties to exclude
+    
+    function extractNestedProperties(obj, prefix = '') {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const fullKey = prefix ? `${prefix}.${key}` : key;
+                const value = obj[key];
+                
+                // If it's an object (but not null or array), it's a parent
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    objectProperties.add(fullKey); // Mark as object (will be excluded)
+                    extractNestedProperties(value, fullKey); // Recurse into children
+                } else {
+                    // It's a leaf property (primitive or array)
+                    leafProperties.push(fullKey);
+                }
+            }
+        }
+    }
+    
+    extractNestedProperties(firstItem);
+    
+    // Return only leaf properties (exclude object parents)
+    return leafProperties;
 }
 
 export function findArrayPath(obj, currentPath = '') {

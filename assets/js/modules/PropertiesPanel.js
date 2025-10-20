@@ -676,18 +676,36 @@ export class PropertiesPanel {
         this.currentPickerField = fieldName;
         
         const properties = extractPropertiesFromFirstItem(this.lastApiData);
+        const firstItem = this.lastApiData[0];
         const instructionEl = document.getElementById('picker-instruction');
         const listEl = document.getElementById('property-picker-list');
 
         instructionEl.textContent = `Select which property to use for ${fieldLabel}:`;
         
-        listEl.innerHTML = properties.map(prop => `
-            <button type="button" class="list-group-item list-group-item-action" data-property="${prop}">
-                <strong>${prop}</strong>
-                <br>
-                <small class="text-muted">Example: ${this.lastApiData[0][prop]}</small>
-            </button>
-        `).join('');
+        // Helper to get nested value for display
+        const getDisplayValue = (obj, path) => {
+            const parts = path.split('.');
+            let value = obj;
+            for (const part of parts) {
+                if (value && typeof value === 'object' && part in value) {
+                    value = value[part];
+                } else {
+                    return 'undefined';
+                }
+            }
+            return value;
+        };
+        
+        listEl.innerHTML = properties.map(prop => {
+            const exampleValue = getDisplayValue(firstItem, prop);
+            return `
+                <button type="button" class="list-group-item list-group-item-action" data-property="${prop}">
+                    <strong>${prop}</strong>
+                    <br>
+                    <small class="text-muted">Example: ${exampleValue}</small>
+                </button>
+            `;
+        }).join('');
 
         // Add click listeners
         listEl.querySelectorAll('button').forEach(btn => {

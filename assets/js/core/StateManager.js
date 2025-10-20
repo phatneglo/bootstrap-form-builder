@@ -24,11 +24,22 @@ class StateManager {
 
     // Get form data
     getFormData() {
+        // Deep clone and clean components - remove runtime API properties
+        const cleanedComponents = this.state.components.map(comp => {
+            const cleaned = JSON.parse(JSON.stringify(comp));
+            // Remove runtime API properties that shouldn't be saved
+            delete cleaned._apiOptions;
+            if (cleaned.properties) {
+                delete cleaned.properties._loadedOptions;
+            }
+            return cleaned;
+        });
+        
         return {
             formId: this.state.formId,
             formName: this.state.formName,
             version: this.state.version,
-            components: this.state.components
+            components: cleanedComponents
         };
     }
 
@@ -108,7 +119,18 @@ class StateManager {
         this.state.formId = data.formId;
         this.state.formName = data.formName || 'Untitled Form';
         this.state.version = data.version || '1.0.0';
-        this.state.components = data.components || [];
+        
+        // Deep clone and clean components - remove runtime API properties
+        this.state.components = (data.components || []).map(comp => {
+            const cleaned = JSON.parse(JSON.stringify(comp));
+            // Remove runtime API properties from loaded JSON
+            delete cleaned._apiOptions;
+            if (cleaned.properties) {
+                delete cleaned.properties._loadedOptions;
+            }
+            return cleaned;
+        });
+        
         this.state.selectedComponentId = null;
         
         EventBus.emit('state:loaded', this.state);
